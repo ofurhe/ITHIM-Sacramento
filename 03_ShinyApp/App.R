@@ -1,10 +1,20 @@
+# This file is part of ITHIM Sacramento.
+
+# File: App.R
+# Purpose: Reading necessary functions for deploying the shiny.app. And shiny app implementation
+
+# library definitions
 library(shiny)
 library(ggplot2)
 
+# reading functions from external R files
+# functions for physical activity
 source("02_R Scripts/01_Functions_PA.R")
 
+# functions for traffic injury
 source("02_R Scripts/02_Functions_RI.R")
 
+# functions for module integration
 source("02_R Scripts/03_Functions_Integration.R")
 
 ###################### ITHIM application for Equity Analysis - Web Interface - Shiny App - Server/UI ######################
@@ -285,7 +295,7 @@ server <- function(input, output) {
     # barID: 1-future years,2-scenarios
     # yaxisID: 1-Death total; 2-Death age.std; 3-DALYs total; 4-DALYs age.std
     aggr.outcome.shiny.app(barID = as.integer(input$selectbarID),yaxisID = as.integer(input$selectyaxisID))
-  })
+  },height = 600)
   
   # Plots Advanced Graphs using inputs from Advanced Plot radio buttons
   output$AdvancedPlot <- renderPlot({
@@ -296,11 +306,22 @@ server <- function(input, output) {
     # outcomeID: 1-physical activity; 2-injury; 3-both
     # demogrID: 1-Race/ethnicty; 2-household income
     # yaxisID: 1-Death total; 2-Death age.std; 3-DALYs total; 4-DALYs age.std; 5-physical activity data
-    integrated.shiny.app(countyID = as.integer(input$selectCounty), barID = as.integer(input$selectbarID_Adv),
-                         outcomeID = as.integer(input$selectoutcomeID),demogrID = as.integer(input$selectdemogrID), 
-                         yaxisID = as.integer(input$selectyaxisID_Adv)
-    )
-  })
+    
+    # validate(
+    #   need(input$selectoutcomeID != "2" && input$selectdemogrID != "2", "This combination is unavailable")
+    # )
+    # integrated.shiny.app(countyID = as.integer(input$selectCounty), barID = as.integer(input$selectbarID_Adv),
+    #                      outcomeID = as.integer(input$selectoutcomeID),demogrID = as.integer(input$selectdemogrID), 
+    #                      yaxisID = as.integer(input$selectyaxisID_Adv)
+    # )
+  },height = 600)
+  
+  # needNeither <- function(input) {
+  #   if (input$selectoutcomeID == "2" && input$selectdemogrID != "2") {
+  #     "This combination is unavailable"
+  #   }
+  #   }
+  # 
   
   # Creates Customizable Plot from Input File
   output$CustomizablePlot <- renderPlot({
